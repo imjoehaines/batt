@@ -23,6 +23,8 @@ int main()
         return 1;
     }
 
+    fclose(handle);
+
     printf("%d\n", percentage);
 
     return 0;
