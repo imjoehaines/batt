@@ -35,13 +35,13 @@ int main(int argc, char **argv)
     enum Mode mode = NONE;
     int option;
 
-    while ((option = getopt(argc, argv, "tb")) != -1) {
+    while ((option = getopt(argc, argv, "ts")) != -1) {
         switch (option) {
             case 't':
                 mode = TMUX;
                 break;
 
-            case 'b':
+            case 's':
                 mode = SH;
                 break;
         }
