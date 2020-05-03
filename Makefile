@@ -15,3 +15,5 @@ build/$(TARGET_EXEC): build/batt.o
 build/batt.o: batt.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
+clean:
+	rm -r build/*
