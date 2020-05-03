@@ -1,6 +1,13 @@
 #include <stdio.h>
+#include <unistd.h>
 
-int main()
+enum Mode {
+    NONE,
+    TMUX,
+    SH,
+};
+
+int main(int argc, char **argv)
 {
     FILE *handle = fopen("/sys/class/power_supply/BAT0/capacity", "r");
 
@@ -25,7 +32,60 @@ int main()
 
     fclose(handle);
 
-    printf("%d\n", percentage);
+    enum Mode mode = NONE;
+    int option;
 
+    while ((option = getopt(argc, argv, "tb")) != -1) {
+        switch (option) {
+            case 't':
+                mode = TMUX;
+                break;
+
+            case 'b':
+                mode = SH;
+                break;
+        }
+    }
+
+    // reference for colours:
+    // https://github.com/morhetz/gruvbox
+
+    int fg = 239;
+    int bg;
+
+    if (percentage >= 80) {
+        bg = 142;
+    } else if (percentage >= 50) {
+        bg = 108;
+    } else if (percentage >= 20) {
+        bg = 175;
+    } else if (percentage >= 10) {
+        bg = 214;
+    } else {
+        fg = 229;
+        bg = 167;
+    }
+
+    switch (mode) {
+        case TMUX:
+            printf(
+                "#[fg=colour%d, bg=colour%d, bold] %d%% #[fg=default, bg=default, nobold]",
+                fg,
+                bg,
+                percentage
+            );
+            break;
+
+        case SH:
+            // We use the bg colour here for the foreground because
+            // it's less disruptive
+            printf("\\033[38;5;%dm%d%%\\033[0m", bg, percentage);
+            break;
+
+        case NONE:
+            printf("%d\n", percentage);
+            break;
+    }
+    
     return 0;
 }
