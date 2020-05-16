@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <unistd.h>
+#include <stdbool.h>
 
 enum Mode {
     NONE,
@@ -34,8 +35,9 @@ int main(int argc, char **argv)
 
     enum Mode mode = NONE;
     int option;
+    bool add_newline = true;
 
-    while ((option = getopt(argc, argv, "ts")) != -1) {
+    while ((option = getopt(argc, argv, "tsn")) != -1) {
         switch (option) {
             case 't':
                 mode = TMUX;
@@ -43,6 +45,10 @@ int main(int argc, char **argv)
 
             case 's':
                 mode = SH;
+                break;
+
+            case 'n':
+                add_newline = false;
                 break;
         }
     }
@@ -79,12 +85,16 @@ int main(int argc, char **argv)
         case SH:
             // We use the bg colour here for the foreground because
             // it's less disruptive
-            printf("\\033[38;5;%dm%d%%\\033[0m", bg, percentage);
+            printf("\033[38;5;%dm%d%%\033[0m", bg, percentage);
             break;
 
         case NONE:
-            printf("%d\n", percentage);
+            printf("%d", percentage);
             break;
+    }
+
+    if (add_newline) {
+        printf("\n");
     }
     
     return 0;
