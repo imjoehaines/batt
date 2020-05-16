@@ -3,9 +3,9 @@
 #include <stdbool.h>
 
 enum Mode {
-    NONE,
+    PLAIN,
     TMUX,
-    SH,
+    SHELL,
 };
 
 int main(int argc, char **argv)
@@ -33,18 +33,18 @@ int main(int argc, char **argv)
 
     fclose(handle);
 
-    enum Mode mode = NONE;
+    enum Mode mode = SHELL;
     int option;
     bool add_newline = true;
 
-    while ((option = getopt(argc, argv, "tsn")) != -1) {
+    while ((option = getopt(argc, argv, "tpn")) != -1) {
         switch (option) {
             case 't':
                 mode = TMUX;
                 break;
 
-            case 's':
-                mode = SH;
+            case 'p':
+                mode = PLAIN;
                 break;
 
             case 'n':
@@ -82,13 +82,13 @@ int main(int argc, char **argv)
             );
             break;
 
-        case SH:
+        case SHELL:
             // We use the bg colour here for the foreground because
             // it's less disruptive
             printf("\033[38;5;%dm%d%%\033[0m", bg, percentage);
             break;
 
-        case NONE:
+        case PLAIN:
             printf("%d", percentage);
             break;
     }
