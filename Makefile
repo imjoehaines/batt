@@ -1,8 +1,13 @@
 .POSIX:
 .SUFFIXES:
 
-CC ?= cc
-CFLAGS = -Wall -Wextra -pedantic-errors -Wno-padded -std=c17
+CC ?= gcc
+CFLAGS = -Wall -Wextra -Werror -Wswitch-enum -Wduplicated-branches \
+	 -Wduplicated-cond -Wstrict-prototypes -Wmissing-prototypes \
+	 -Wold-style-definition -Wmissing-declarations \
+	 -pedantic -pedantic-errors \
+	 -fanalyzer \
+	 -std=c17
 INSTALL_PATH ?= /usr/bin
 
 TARGET_EXEC ?= batt
